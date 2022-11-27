@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<script>
+  window.onload = function() {
+  var search = location.search
+  var params = `${date}`
+  var getType = params.get('date').split(" ").slice(1,4);
+
+  var el = document.getElementById("date");
+  el.textContent = getType;
+}
+</script>
+<body>
+<div class="container">
+    <div>
+        <h1>Hello Spring</h1>
+        <p></p>
+        <p>회원 기능</p>
+        <p>
+            <a href="/members/new">회원 가입</a>
+            <a href="/members">회원 목록</a>
+            <div id="date">
+            </div>
+        </p>
+    </div>
+</div> <!-- /container -->
+</body>
+</html>
