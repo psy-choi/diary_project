@@ -5,16 +5,26 @@ import com.example.Diary.Data.dao.JoinDAO;
 import com.example.Diary.service.memberservice;
 import com.example.Diary.Data.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-public abstract class memberserviceimpl implements memberservice {
+@Service
+public class memberserviceimpl implements memberservice {
 
     private final JoinDAO DB_member;
 
     @Autowired
     public memberserviceimpl(JoinDAO DB_member){
         this.DB_member = DB_member;
+    }
+
+    @Override
+    public memberresponsDTO getMember(String ID){
+        Join_Entity get_member;
+        get_member = DB_member.get_Join_data(ID);
+        memberresponsDTO response = new memberresponsDTO(get_member.getNumber(), get_member.getID(), get_member.getPassword());
+        return response;
     }
 
 

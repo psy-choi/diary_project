@@ -1,10 +1,15 @@
 package com.example.Diary.Data.Entity;
 
+import com.example.Diary.DiaryData.Entity.Diary_Entity;
+
 import lombok.Getter;
 import lombok.Setter;
 
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,7 +30,5 @@ public class Join_Entity {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-
 
 }

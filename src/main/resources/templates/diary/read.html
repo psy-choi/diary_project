@@ -17,21 +17,14 @@
     <div>
         <h1>오늘의 일기</h1>
         <p></p>
-        <p>당신의 이야기를 들려주세요</p>
+        <p th:text="${User} + '님의 일기입니다.'"/>
         <div id="date">
         </div>
         <p>
-          <form action="index.html" method="post">
-            <input id="diary_date1" type="hidden" name="date">
-            <input type="submit" value="작성하기">
-          </form>
-        <form action="diary/page/read" method="get">
-            <input id="diary_date2" type="hidden" name="date">
-            <input type="submit" value="가져오기">
-        </form>
-
-
         </p>
+        <p th:text="'날짜: ' + ${date}"/>
+        <br>
+        <p th:text="'일기 내용: ' + ${Diary}"/>
     </div>
 </div> <!-- /container -->
 </body>

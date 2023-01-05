@@ -12217,7 +12217,7 @@ var FullCalendar = (function (exports) {
             var props = this.props;
             var navLinkAttrs = buildNavLinkAttrs(this.context, props.date);
             return (createElement(DayCellContent, { date: props.date, dateProfile: props.dateProfile, todayRange: props.todayRange, showDayNumber: props.showDayNumber, extraHookProps: props.extraHookProps, defaultContent: renderTopInner }, function (innerElRef, innerContent) { return ((innerContent || props.forceDayTop) && (createElement("div", { className: "fc-daygrid-day-top", ref: innerElRef },
-                createElement("a", __assign({ id: props.dayNumberId, className: "fc-daygrid-day-number", href:`/diary/page?date=${props.date}` }, navLinkAttrs), innerContent || createElement(Fragment, null, "\u00A0"))))); }));
+                createElement("a", __assign({ id: props.dayNumberId, className: "fc-daygrid-day-number", href:`/diary/page?User="4"&date=${props.date}` }, navLinkAttrs), innerContent || createElement(Fragment, null, "\u00A0"))))); }));
         }; //바꿈
 
         return TableCellTop;

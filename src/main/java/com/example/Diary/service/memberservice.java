@@ -1,9 +1,12 @@
 package com.example.Diary.service;
 
 import com.example.Diary.Data.dto.*;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface memberservice {
-    memberresponsDTO getMember();
+
+    memberresponsDTO getMember(String ID);
 
     memberresponsDTO saveMember(memberDTO member);
 

@@ -14,11 +14,19 @@ import java.util.Optional;
 public class JoinDAOimpl implements JoinDAO {
     private final Join_Repository join_repository;
 
+
+
     @Autowired
     public JoinDAOimpl(Join_Repository join_repository){
         this.join_repository = join_repository;
     }
 
+
+    @Override
+    public Join_Entity get_Join_data(String ID){
+        Join_Entity get_join = join_repository.findByID(ID);
+        return get_join;
+    }
 
     @Override
     public Join_Entity insert_Join_data(Join_Entity join) {

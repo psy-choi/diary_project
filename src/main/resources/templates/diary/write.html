@@ -21,13 +21,11 @@
         <div id="date">
         </div>
         <p>
-          <form action="index.html" method="post">
-            <input id="diary_date1" type="hidden" name="date">
+        <form action="/page/write_method" method="post">
+            <input id="user" type="hidden" name="User" th:value="${User}"/>
+            <input id="diary_date" type="hidden" name="date" th:value="${date}"/>
+            <input id="diary_nature" type="textarea" name="Diary">
             <input type="submit" value="작성하기">
-          </form>
-        <form action="diary/page/read" method="get">
-            <input id="diary_date2" type="hidden" name="date">
-            <input type="submit" value="가져오기">
         </form>
 
 
