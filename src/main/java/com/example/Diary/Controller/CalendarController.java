@@ -52,7 +52,7 @@ public class CalendarController {
         model.addAttribute("date", date);
         DiaryDTO get_Diary = diaryservice.getDiary(User, date);
         model.addAttribute("Diary", get_Diary.getDiary());
-        return "write";
+        return "diary/read";
     }
 
     @GetMapping("/page/write")
@@ -60,6 +60,13 @@ public class CalendarController {
         model.addAttribute("User", User);
         model.addAttribute("date", date);
         return "diary/write";
+    }
+
+    @GetMapping("/page/changed")
+    public String page_changed(Model model, @RequestParam String User, @RequestParam String date){
+        model.addAttribute("User", User);
+        model.addAttribute("date", date);
+        return "diary/change";
     }
 
 

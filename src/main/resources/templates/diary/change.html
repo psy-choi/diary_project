@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div class="container">
+    <div>
+        <h1>오늘의 일기</h1>
+        <p></p>
+        <p th:text="${User} + '님의 일기입니다. 수정해주세요.'"/>
+        <div id="date">
+        </div>
+        <p>
+        </p>
+        <p th:text="'날짜: ' + ${date}"/>
+        <br>
+        <p th:text="'일기 내용: ' + ${Diary}"/>
+    </div>
+    <br>
+    <form action="write_method" method="put">
+        <input id="user" type="hidden" name="User" th:value="${User}"/>
+        <input id="diary_date" type="hidden" name="date" th:value="${date}"/>
+        <input id="diary_nature" type="textarea" name="Diary">
+        <input type="submit" value="작성하기">
+    </form>
+</div> <!-- /container -->
+</body>
+</html>
