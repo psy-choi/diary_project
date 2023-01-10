@@ -66,6 +66,8 @@ public class CalendarController {
     public String page_changed(Model model, @RequestParam String User, @RequestParam String date){
         model.addAttribute("User", User);
         model.addAttribute("date", date);
+        DiaryDTO get_Diary = diaryservice.getDiary(User, date);
+        model.addAttribute("Diary", get_Diary.getDiary());
         return "diary/change";
     }
 

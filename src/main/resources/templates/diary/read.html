@@ -16,8 +16,7 @@
         <p th:text="'일기 내용: ' + ${Diary}"/>
     </div>
     <br>
-    <button><a th:href="@{/diary/page/changed(User = ${User}, date = ${date}})}">글 상세보기</a>
-        수정하기</a></button>
+    <button><a th:href="@{/diary/page/changed(User = ${User}, date = ${date})}">수정하기</a></button>
 </div> <!-- /container -->
 </body>
 </html>
