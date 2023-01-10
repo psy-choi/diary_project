@@ -10,8 +10,6 @@ import com.example.Diary.service.Diaryservice;
 import com.example.Diary.service.memberservice;
 import com.example.Diary.Data.dto.*;
 
-import java.lang.reflect.Member;
-
 
 @Controller
 @RequestMapping("/diary")
@@ -40,6 +38,7 @@ public class CalendarController {
     @GetMapping("/page")
     public String new_page(Model model, @RequestParam String User, @RequestParam String date){
         // 해당 html 파일에다가 User과 Date이 값을 넣고 일기의 내용을 가져옴
+
         model.addAttribute("User", User);
         model.addAttribute("date", date);
         return "page";
@@ -48,6 +47,15 @@ public class CalendarController {
     @GetMapping("/page/read")
     public String page_model(Model model, @RequestParam String User, @RequestParam String date){
         // 데이터에서 ID와 date에 해당하는 값을 가져옴
+
+        /*try {
+            DiaryDTO get_Diary = diaryservice.getDiary(User, date);
+        } catch (Exception e) {
+            model.addAttribute("msg", "해당 날짜에 일기가 존재하지 않습니다. 뒤로가기를 눌러 작성해주세요.");
+            model.addAttribute("url", url);
+            return "alert";
+        }*/
+
         model.addAttribute("User", User);
         model.addAttribute("date", date);
         DiaryDTO get_Diary = diaryservice.getDiary(User, date);
@@ -105,11 +113,11 @@ public class CalendarController {
     }
 
     @DeleteMapping("/page/delete")
-    public String delete_somthing(Model model,@RequestParam String User,  @RequestParam String Date){
+    public String delete_somthing(Model model,@RequestParam String User,  @RequestParam String date){
         // DB에 일기 내용을 지운다.
         String url = String.format("redirect:/diary/home?number=%s",User);
         try {
-            diaryservice.deleteDiary(User, Date);
+            diaryservice.deleteDiary(User, date);
         } catch (Exception e) {
             model.addAttribute("msg", "존재하는 데이터가 없습니다. 생성 버튼을 눌러주세요.");
             model.addAttribute("url", model.addAttribute("url", url));

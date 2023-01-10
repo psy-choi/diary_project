@@ -14,16 +14,9 @@ import com.example.Diary.Data.Entity.Join_Entity;
 @Table(name = "diary")
 public class Diary_Entity {
 
-    @ManyToOne
-    @JoinColumn(name = "number", insertable = false, updatable = false)
-    private Join_Entity User_ID;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long number;
-
-    @Column(nullable = false)
-    private String user;
 
     @Column(unique = true, nullable = false)
     private String date;
@@ -35,9 +28,8 @@ public class Diary_Entity {
 
     private LocalDateTime updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "number", insertable = false, updatable = false)
+    private Join_Entity User_ID;
 
-
-    /*public void setUser_ID(Join_Entity User_ID){
-        this.User_ID = User_ID;
-    }*/
 }

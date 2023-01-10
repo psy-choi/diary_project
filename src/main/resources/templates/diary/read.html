@@ -17,6 +17,12 @@
     </div>
     <br>
     <button><a th:href="@{/diary/page/changed(User = ${User}, date = ${date})}">수정하기</a></button>
+        <br>
+    <button><form action="delete" method="#" th:method="delete">
+        <input id="user" type="hidden" name="User" th:value="${User}"/>
+        <input id="diary_date" type="hidden" name="date" th:value="${date}"/>
+        <input type="submit" value="삭제하기">
+    </form></button>
 </div> <!-- /container -->
 </body>
 </html>

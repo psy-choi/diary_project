@@ -1,5 +1,7 @@
 package com.example.Diary.service.Diaryserviceimpl;
 
+import com.example.Diary.Data.Entity.Join_Entity;
+import com.example.Diary.Data.dao.JoinDAO;
 import com.example.Diary.DiaryData.Entity.Diary_Entity;
 import com.example.Diary.DiaryData.dao.DiaryDAO;
 import com.example.Diary.DiaryData.dto.DiaryDTO;
@@ -13,16 +15,22 @@ import java.time.LocalDateTime;
 public class Diaryserviceimpl implements Diaryservice {
 
     private final DiaryDAO diaryDAO;
+    private final JoinDAO DB_member;
 
     @Autowired
-    public Diaryserviceimpl (DiaryDAO diaryDAO){ this.diaryDAO = diaryDAO;}
+    public Diaryserviceimpl (DiaryDAO diaryDAO, JoinDAO DB_member){
+        this.diaryDAO = diaryDAO;
+        this.DB_member = DB_member;
+    }
 
 
     @Override
     public DiaryDTO getDiary(String User, String Date) {
+        Join_Entity get_member;
+        get_member = DB_member.get_Join_data(User);
         Diary_Entity get_Diary;
         get_Diary = diaryDAO.get_Diary_data(User, Date);
-        DiaryDTO get_Diary_DTO = new DiaryDTO(get_Diary.getUser(), get_Diary.getDate(), get_Diary.getDiary());
+        DiaryDTO get_Diary_DTO = new DiaryDTO(get_member.getID(), get_Diary.getDate(), get_Diary.getDiary());
         return get_Diary_DTO;
     }
 
