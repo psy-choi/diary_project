@@ -28,8 +28,8 @@ public class Diary_Entity {
 
     private LocalDateTime updatedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "number", insertable = false, updatable = false)
-    private Join_Entity User_ID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user", insertable = false, updatable = false)
+    private Join_Entity userID;
 
 }

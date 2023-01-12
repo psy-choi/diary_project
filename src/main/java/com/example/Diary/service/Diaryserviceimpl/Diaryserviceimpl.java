@@ -26,18 +26,20 @@ public class Diaryserviceimpl implements Diaryservice {
 
     @Override
     public DiaryDTO getDiary(String User, String Date) {
-        Join_Entity get_member;
-        get_member = DB_member.get_Join_data(User);
         Diary_Entity get_Diary;
         get_Diary = diaryDAO.get_Diary_data(User, Date);
-        DiaryDTO get_Diary_DTO = new DiaryDTO(get_member.getID(), get_Diary.getDate(), get_Diary.getDiary());
+        DiaryDTO get_Diary_DTO = new DiaryDTO(User, get_Diary.getDate(), get_Diary.getDiary());
         return get_Diary_DTO;
     }
 
     @Override
     public DiaryDTO saveDiary(DiaryDTO Diary) {
+        Join_Entity member = new Join_Entity();
+        Long user = Long.parseLong(Diary.getUser());
+        member = DB_member.get_Join_data_number(user);
+
         Diary_Entity save_diary = new Diary_Entity();
-        save_diary.setUser(Diary.getUser());
+        save_diary.setUserID(member);
         save_diary.setDate(Diary.getDate());
         save_diary.setDiary(Diary.getDiary());
         save_diary.setCreatedAt(LocalDateTime.now());
@@ -52,8 +54,8 @@ public class Diaryserviceimpl implements Diaryservice {
     @Override
     public DiaryDTO changedDiary(String User, String Date, String Diary) throws Exception {
         Diary_Entity change_Diary = diaryDAO.update_Diary_data(User, Date, Diary);
-
-        DiaryDTO changed_Diary = new DiaryDTO(change_Diary.getUser(), change_Diary.getDate(), change_Diary.getDiary());
+        String user = String.valueOf(change_Diary.getUserID().getNumber());
+        DiaryDTO changed_Diary = new DiaryDTO(user, change_Diary.getDate(), change_Diary.getDiary());
 
         return changed_Diary;
     }

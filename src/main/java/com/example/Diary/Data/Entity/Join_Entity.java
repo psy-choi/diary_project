@@ -31,4 +31,7 @@ public class Join_Entity {
 
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "userID", fetch = FetchType.EAGER)
+    private List<Diary_Entity> diary_entityList = new ArrayList<>();
+
 }

@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface Diary_Repository extends JpaRepository<Diary_Entity, Long> {
 
-    Diary_Entity findByUserAndDate(String User, String Date);
+    Diary_Entity findByUserID_NumberAndDate(Long User, String Date);
 }

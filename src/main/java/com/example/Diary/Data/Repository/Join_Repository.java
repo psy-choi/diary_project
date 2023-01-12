@@ -5,5 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface Join_Repository extends JpaRepository<Join_Entity, Long> {
     Join_Entity findByID(String ID);
+
+    Join_Entity findFirst1Bynumber(Long ID);
 }
 

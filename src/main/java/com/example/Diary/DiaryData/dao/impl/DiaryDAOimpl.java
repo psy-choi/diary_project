@@ -20,7 +20,8 @@ public class DiaryDAOimpl implements DiaryDAO {
 
     @Override
     public Diary_Entity get_Diary_data(String User, String Date) {
-        Diary_Entity get_Diary = diary_repository.findByUserAndDate(User, Date);
+        Long user = Long.parseLong(User);
+        Diary_Entity get_Diary = diary_repository.findByUserID_NumberAndDate(user, Date);
         return get_Diary;
     }
 
