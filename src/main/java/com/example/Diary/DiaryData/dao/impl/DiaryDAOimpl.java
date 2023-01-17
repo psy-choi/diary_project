@@ -34,7 +34,7 @@ public class DiaryDAOimpl implements DiaryDAO {
     @Override
     public Diary_Entity update_Diary_data(String User, String Date, String Diary) throws Exception {
         Diary_Entity updated_Diary = get_Diary_data(User, Date);
-        Optional<Diary_Entity> present_data = diary_repository.findById(updated_Diary.getNumber());
+        Optional<Diary_Entity> present_data = diary_repository.findById(updated_Diary.getNumbers());
         Diary_Entity updated_Diary_done;
         if(present_data.isPresent()){
             updated_Diary.setDiary(Diary);
@@ -50,7 +50,7 @@ public class DiaryDAOimpl implements DiaryDAO {
     @Override
     public void delete_Join_data(String User, String Date) throws Exception {
         Diary_Entity deleted_Diary = get_Diary_data(User, Date);
-        Optional<Diary_Entity> present_data = diary_repository.findById(deleted_Diary.getNumber());
+        Optional<Diary_Entity> present_data = diary_repository.findById(deleted_Diary.getNumbers());
 
         if (present_data.isPresent()){
             diary_repository.delete(deleted_Diary);

@@ -34,17 +34,20 @@ public class Diaryserviceimpl implements Diaryservice {
 
     @Override
     public DiaryDTO saveDiary(DiaryDTO Diary) {
-        Join_Entity member = new Join_Entity();
         Long user = Long.parseLong(Diary.getUser());
-        member = DB_member.get_Join_data_number(user);
-
+        System.out.println(user);
+        Join_Entity member = DB_member.get_Join_data_number(user);
+        System.out.println(member.getNumber());
+        System.out.println(member.getID());
+        System.out.println(member.getPassword());
         Diary_Entity save_diary = new Diary_Entity();
         save_diary.setUserID(member);
         save_diary.setDate(Diary.getDate());
         save_diary.setDiary(Diary.getDiary());
         save_diary.setCreatedAt(LocalDateTime.now());
         save_diary.setUpdatedAt(LocalDateTime.now());
-
+        System.out.println(member);
+        System.out.println(save_diary);
         diaryDAO.insert_Diary_data(save_diary);
 
         return Diary;

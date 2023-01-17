@@ -11,6 +11,11 @@ import com.example.Diary.service.memberservice;
 import com.example.Diary.Data.dto.*;
 
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
 @Controller
 @RequestMapping("/diary")
 public class CalendarController {
@@ -36,10 +41,11 @@ public class CalendarController {
 
 
     @GetMapping("/page")
-    public String new_page(Model model, @RequestParam String User, @RequestParam String date){
+    public String new_page(Model model, @RequestParam String date,
+                           @CookieValue(value="User") String user){
         // 해당 html 파일에다가 User과 Date이 값을 넣고 일기의 내용을 가져옴
 
-        model.addAttribute("User", User);
+        model.addAttribute("User", Long.parseLong(user));
         model.addAttribute("date", date);
         return "page";
     }
@@ -47,14 +53,14 @@ public class CalendarController {
     @GetMapping("/page/read")
     public String page_model(Model model, @RequestParam String User, @RequestParam String date){
         // 데이터에서 ID와 date에 해당하는 값을 가져옴
-
-        /*try {
+        String url = String.format("redirect:/diary/home?number=%s",User);
+        try {
             DiaryDTO get_Diary = diaryservice.getDiary(User, date);
         } catch (Exception e) {
             model.addAttribute("msg", "해당 날짜에 일기가 존재하지 않습니다. 뒤로가기를 눌러 작성해주세요.");
             model.addAttribute("url", url);
             return "alert";
-        }*/
+        }
 
         model.addAttribute("User", User);
         model.addAttribute("date", date);
@@ -97,8 +103,8 @@ public class CalendarController {
         return url;
     }
 
-    @PutMapping("/page/write_method")
-    public String update_somthing(Model model, @RequestParam String User, @RequestParam String date, @RequestParam String Diary){
+    @PostMapping("/page/change_method")
+    public String update_something(Model model, @RequestParam String User, @RequestParam String date, @RequestParam String Diary){
         // DB에 수정된 내용을 보냄
         String url = String.format("redirect:/diary/home?number=%s",User);
         try {
@@ -148,14 +154,21 @@ public class CalendarController {
         return "login_page";
     }
     @PostMapping("/login/get")
-    public String login_get(Model model, @RequestParam String ID, @RequestParam String password){
+    public String login_get(Model model, @RequestParam String ID, @RequestParam String password,
+                            HttpServletResponse response){
         memberresponsDTO profile = Memberservice.getMember(ID);
-
         if (!profile.getPassword().equals(password)){
             model.addAttribute("msg", "비밀번호가 올바르지 않습니다.");
             model.addAttribute("url", "/diary/");
             return "alert";
         }
+        // 여기는 그거 인듯
+        Cookie cookie = new Cookie("User", String.valueOf(profile.getNumber()));
+        cookie.setMaxAge(60*60*2);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+
         String url = String.format("redirect:/diary/home?number=%s",profile.getNumber());
         // 데이터를 가져오고 회원 정보를 login_information에 나타나도록 한다.
         return url;

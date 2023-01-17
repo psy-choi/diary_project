@@ -16,7 +16,7 @@ public class Diary_Entity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long number;
+    private Long numbers;
 
     @Column(unique = true, nullable = false)
     private String date;
@@ -29,7 +29,7 @@ public class Diary_Entity {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user", insertable = false, updatable = false)
+    @JoinColumn(name = "user")
     private Join_Entity userID;
 
 }

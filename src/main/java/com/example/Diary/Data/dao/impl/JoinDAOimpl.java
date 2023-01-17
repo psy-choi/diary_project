@@ -30,7 +30,7 @@ public class JoinDAOimpl implements JoinDAO {
 
     @Override
     public Join_Entity get_Join_data_number(Long ID){
-        Join_Entity get_join = join_repository.findFirst1Bynumber(ID);
+        Join_Entity get_join = join_repository.findBynumber(ID);
         return get_join;
     }
 
