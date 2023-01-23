@@ -1,4 +1,4 @@
-package com.example.Diary.DiaryData.dto;
+package com.example.Diary.DiaryData.Repository.dto;
 
 import com.example.Diary.DiaryData.Entity.Diary_Entity;
 

@@ -10,7 +10,7 @@ public interface memberservice {
 
     memberresponsDTO saveMember(memberDTO member);
 
-    memberresponsDTO changedMember(Long number, String ID, String Password) throws Exception;
+    memberresponsDTO changedMember(Long number, String ID, String Password);
 
-    void deleteMember(Long number) throws Exception;
+    void deleteMember(Long number);
 }

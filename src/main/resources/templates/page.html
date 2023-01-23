@@ -1,17 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<script>
-  window.onload = function() {
-  var params = `${date}`;
-  console.log(params);
-  var getdate = params.split(" ").slice(1,4);
-  console.log(getdate);
-  var el = document.getElementById("date");
-  el.textContent = getdate;
-  var diary_date = document.getElementById("diary_date")
-  diary_date.textContent = getdate;
-}
-</script>
+
 <body>
 <div class="container">
     <div>
@@ -22,12 +11,10 @@
         </div>
         <p>
           <form action="page/write" method="get">
-            <input id="user1" type="hidden" name="User" th:value="${User}"/>
             <input id="diary_date1" type="hidden" name="date" th:value="${date}"/>
             <input type="submit" value="작성하기">
           </form>
         <form action="page/read" method="get">
-            <input id="user2" type="hidden" name="User" th:value="${User}"/>
             <input id="diary_date2" type="hidden" name="date" th:value="${date}"/>
             <input type="submit" value="가져오기">
         </form>

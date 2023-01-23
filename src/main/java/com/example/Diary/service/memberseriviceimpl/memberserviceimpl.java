@@ -44,7 +44,7 @@ public class memberserviceimpl implements memberservice {
     }
 
     @Override
-    public memberresponsDTO changedMember(Long number, String ID, String Password) throws Exception {
+    public memberresponsDTO changedMember(Long number, String ID, String Password) {
         Join_Entity change_member = DB_member.update_Join_data(number, ID, Password);
 
         memberresponsDTO response = new memberresponsDTO(change_member.getNumber(), change_member.getID(), change_member.getPassword());
@@ -53,7 +53,7 @@ public class memberserviceimpl implements memberservice {
     }
 
     @Override
-    public void deleteMember(Long number) throws Exception {
+    public void deleteMember(Long number){
         DB_member.delete_Join_data(number);
     }
 }

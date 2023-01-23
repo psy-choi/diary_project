@@ -41,31 +41,26 @@ public class JoinDAOimpl implements JoinDAO {
     }
 
     @Override
-    public Join_Entity update_Join_data(Long number, String ID, String Password) throws Exception {
+    public Join_Entity update_Join_data(Long number, String ID, String Password){
         Optional<Join_Entity> present_Date = join_repository.findById(number); //NULL 값을 방지
         Join_Entity updated_join_Done;
-        if (present_Date.isPresent()){
-            Join_Entity updated_join = join_repository.getById(number);
-            updated_join.setID(ID);
-            updated_join.setPassword(Password);
-            updated_join.setUpdatedAt(LocalDateTime.now());
 
-            updated_join_Done = join_repository.save(updated_join);
-        } else {
-            throw new Exception();
-        }
+        Join_Entity updated_join = join_repository.getById(number);
+        updated_join.setID(ID);
+        updated_join.setPassword(Password);
+        updated_join.setUpdatedAt(LocalDateTime.now());
+        updated_join_Done = join_repository.save(updated_join);
+
         return updated_join_Done;
     }
 
     @Override
-    public void delete_Join_data(Long number) throws Exception {
+    public void delete_Join_data(Long number) {
         Optional<Join_Entity> present_Date = join_repository.findById(number);
 
-        if (present_Date.isPresent()){
-            Join_Entity updated_join = join_repository.getById(number);
-            join_repository.delete(updated_join);
-        } else {
-            throw new Exception();
-        }
+
+        Join_Entity updated_join = join_repository.getById(number);
+        join_repository.delete(updated_join);
+
     }
 }

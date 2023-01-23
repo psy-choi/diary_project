@@ -4,11 +4,12 @@ import com.example.Diary.Data.Entity.Join_Entity;
 import com.example.Diary.Data.dao.JoinDAO;
 import com.example.Diary.DiaryData.Entity.Diary_Entity;
 import com.example.Diary.DiaryData.dao.DiaryDAO;
-import com.example.Diary.DiaryData.dto.DiaryDTO;
+import com.example.Diary.DiaryData.Repository.dto.DiaryDTO;
 import com.example.Diary.service.Diaryservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 
 @Service
@@ -26,8 +27,7 @@ public class Diaryserviceimpl implements Diaryservice {
 
     @Override
     public DiaryDTO getDiary(String User, String Date) {
-        Diary_Entity get_Diary;
-        get_Diary = diaryDAO.get_Diary_data(User, Date);
+        Diary_Entity get_Diary = diaryDAO.get_Diary_data(User, Date);
         DiaryDTO get_Diary_DTO = new DiaryDTO(User, get_Diary.getDate(), get_Diary.getDiary());
         return get_Diary_DTO;
     }
@@ -35,19 +35,16 @@ public class Diaryserviceimpl implements Diaryservice {
     @Override
     public DiaryDTO saveDiary(DiaryDTO Diary) {
         Long user = Long.parseLong(Diary.getUser());
-        System.out.println(user);
+
         Join_Entity member = DB_member.get_Join_data_number(user);
-        System.out.println(member.getNumber());
-        System.out.println(member.getID());
-        System.out.println(member.getPassword());
+
         Diary_Entity save_diary = new Diary_Entity();
         save_diary.setUserID(member);
         save_diary.setDate(Diary.getDate());
         save_diary.setDiary(Diary.getDiary());
         save_diary.setCreatedAt(LocalDateTime.now());
         save_diary.setUpdatedAt(LocalDateTime.now());
-        System.out.println(member);
-        System.out.println(save_diary);
+
         diaryDAO.insert_Diary_data(save_diary);
 
         return Diary;
@@ -55,7 +52,7 @@ public class Diaryserviceimpl implements Diaryservice {
     }
 
     @Override
-    public DiaryDTO changedDiary(String User, String Date, String Diary) throws Exception {
+    public DiaryDTO changedDiary(String User, String Date, String Diary)  {
         Diary_Entity change_Diary = diaryDAO.update_Diary_data(User, Date, Diary);
         String user = String.valueOf(change_Diary.getUserID().getNumber());
         DiaryDTO changed_Diary = new DiaryDTO(user, change_Diary.getDate(), change_Diary.getDiary());
@@ -64,7 +61,7 @@ public class Diaryserviceimpl implements Diaryservice {
     }
 
     @Override
-    public void deleteDiary(String User, String Date) throws Exception {
+    public void deleteDiary(String User, String Date) {
         diaryDAO.delete_Join_data(User, Date);
     }
 }

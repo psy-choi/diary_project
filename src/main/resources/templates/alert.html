@@ -9,7 +9,8 @@
   <script th:inline="javascript">
 			const msg = [[${msg}]]
 	    	alert(msg);	// 알림표시
-			window.location.replace( [[${url}]] );	// 이동하는 페이지
+			window.history.back();
+			//window.location.replace( [[${url}]] );	// 이동하는 페이지
 
 	    </script>
 </head>

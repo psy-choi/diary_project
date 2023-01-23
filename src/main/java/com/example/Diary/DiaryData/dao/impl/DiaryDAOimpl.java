@@ -5,6 +5,8 @@ import com.example.Diary.DiaryData.Repository.Diary_Repository;
 import com.example.Diary.DiaryData.dao.DiaryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import com.example.Diary.Exception.MyException;
+
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -32,31 +34,26 @@ public class DiaryDAOimpl implements DiaryDAO {
     }
 
     @Override
-    public Diary_Entity update_Diary_data(String User, String Date, String Diary) throws Exception {
+    public Diary_Entity update_Diary_data(String User, String Date, String Diary)  {
         Diary_Entity updated_Diary = get_Diary_data(User, Date);
         Optional<Diary_Entity> present_data = diary_repository.findById(updated_Diary.getNumbers());
         Diary_Entity updated_Diary_done;
-        if(present_data.isPresent()){
-            updated_Diary.setDiary(Diary);
-            updated_Diary.setUpdatedAt(LocalDateTime.now());
 
-            updated_Diary_done = diary_repository.save(updated_Diary);
-        } else {
-            throw new Exception();
-        }
+        updated_Diary.setDiary(Diary);
+        updated_Diary.setUpdatedAt(LocalDateTime.now());
+        updated_Diary_done = diary_repository.save(updated_Diary);
+
         return updated_Diary_done;
     }
 
     @Override
-    public void delete_Join_data(String User, String Date) throws Exception {
-        Diary_Entity deleted_Diary = get_Diary_data(User, Date);
-        Optional<Diary_Entity> present_data = diary_repository.findById(deleted_Diary.getNumbers());
+    public void delete_Join_data(String User, String Date){
+        Diary_Entity deleted_Diary;
+        deleted_Diary = get_Diary_data(User, Date);
+            //Optional<Diary_Entity> present_data = diary_repository.findById(deleted_Diary.getNumbers());
 
-        if (present_data.isPresent()){
-            diary_repository.delete(deleted_Diary);
-        } else {
-            throw new Exception();
-        }
+        diary_repository.delete(deleted_Diary);
+
 
     }
 }
