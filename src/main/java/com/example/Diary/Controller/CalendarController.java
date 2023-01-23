@@ -5,6 +5,7 @@ import com.example.Diary.Data.dto.memberDTO;
 import com.example.Diary.Data.dto.memberresponsDTO;
 import com.example.Diary.DiaryData.Repository.dto.DiaryDTO;
 import com.example.Diary.Exception.CustomExceptionHandler;
+import com.example.Diary.Exception.PasswordException;
 import com.example.Diary.service.Diaryservice;
 import com.example.Diary.service.memberservice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +110,6 @@ public class CalendarController {
 
         diaryservice.deleteDiary(User, date);
 
-
         return url;
     }
 
@@ -122,12 +122,10 @@ public class CalendarController {
 
     @PostMapping("/login/get")
     public String login_get(Model model, @RequestParam String ID, @RequestParam String password,
-                            HttpServletResponse response) {
+                            HttpServletResponse response) throws PasswordException {
         memberresponsDTO profile = Memberservice.getMember(ID);
         if (!profile.getPassword().equals(password)) {
-            model.addAttribute("msg", "비밀번호가 올바르지 않습니다.");
-            model.addAttribute("url", "/diary/");
-            return "alert";
+            throw new PasswordException();
         }
         // 여기는 그거 인듯
         Cookie cookie = new Cookie("User", String.valueOf(profile.getNumber()));
@@ -149,11 +147,10 @@ public class CalendarController {
 
 
     @PostMapping("/join/post")
-    public String join_post(Model model, @RequestParam String ID, @RequestParam String PASSWORD, @RequestParam String PW) {
+    public String join_post(Model model, @RequestParam String ID, @RequestParam String PASSWORD, @RequestParam String PW)
+            throws PasswordException{
         if (!PASSWORD.equals(PW)) {
-            model.addAttribute("msg", "비밀번호가 동일하지 않습니다.");
-            model.addAttribute("url", "/diary/join");
-            return "alert";
+            throw new PasswordException();
         }
 
         memberDTO profile = new memberDTO(ID, PASSWORD);
