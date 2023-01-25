@@ -6,6 +6,7 @@ import com.example.Diary.Data.dto.memberresponsDTO;
 import com.example.Diary.DiaryData.Repository.dto.DiaryDTO;
 import com.example.Diary.Exception.CustomExceptionHandler;
 import com.example.Diary.Exception.PasswordException;
+import com.example.Diary.Security.SecurityService;
 import com.example.Diary.service.Diaryservice;
 import com.example.Diary.service.memberservice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 
 @Controller
@@ -22,33 +24,34 @@ import javax.servlet.http.HttpServletResponse;
 public class CalendarController {
 
     private final CustomExceptionHandler customExceptionHandler;
-
     private final memberservice Memberservice;
     private final Diaryservice diaryservice;
+    private final SecurityService securityService;
 
 
     @Autowired
-    public CalendarController(memberservice Memberservice, Diaryservice diaryservice, CustomExceptionHandler custom) {
+    public CalendarController(memberservice Memberservice, Diaryservice diaryservice, CustomExceptionHandler custom
+    , SecurityService securityService) {
         this.Memberservice = Memberservice;
         this.diaryservice = diaryservice;
         this.customExceptionHandler = custom;
+        this.securityService = securityService;
     }
 
     @GetMapping("/home")
-    public String Calendar(Model model, @CookieValue("User") String user) {
-
+    public String Calendar(Model model, @CookieValue("User") String User) {
+        String user = securityService.getSubject(User);
         model.addAttribute("ID_number", user);
-
         return "calendar";
     }
 
 
     @GetMapping("/page")
     public String new_page(Model model, @RequestParam String date,
-                           @CookieValue(value = "User") String user) {
+                           @CookieValue(value = "User") String User) {
         // 해당 html 파일에다가 User과 Date이 값을 넣고 일기의 내용을 가져옴
-
-        model.addAttribute("User", Long.parseLong(user));
+        Long user = Long.parseLong(securityService.getSubject(User));
+        model.addAttribute("User", user);
         model.addAttribute("date", date);
         return "page";
     }
@@ -58,11 +61,12 @@ public class CalendarController {
         // 데이터에서 ID와 date에 해당하는 값을 가져옴
         StringBuffer sb = new StringBuffer(date);
         sb = sb.replace(34,42, "(한국 표준시)");
+        String user = securityService.getSubject(User);
 
-        DiaryDTO get_Diary = diaryservice.getDiary(User, sb.toString());
+        DiaryDTO get_Diary = diaryservice.getDiary(user, sb.toString());
 
 
-        model.addAttribute("User", User);
+        model.addAttribute("User", user);
         model.addAttribute("date", sb.toString());
         model.addAttribute("Diary", get_Diary.getDiary());
         return "diary/read";
@@ -70,14 +74,17 @@ public class CalendarController {
 
     @GetMapping("/page/write")
     public String page_write(Model model, @CookieValue("User") String User, @RequestParam String date) {
-        model.addAttribute("User", User);
+        String user = securityService.getSubject(User);
+        model.addAttribute("User", user);
         model.addAttribute("date", date);
         return "diary/write";
     }
 
     @GetMapping("/page/changed")
     public String page_changed(Model model, @CookieValue("User") String User, @RequestParam String date) {
-        model.addAttribute("User", User);
+        String user = securityService.getSubject(User);
+
+        model.addAttribute("User", user);
         model.addAttribute("date", date);
         DiaryDTO get_Diary = diaryservice.getDiary(User, date);
         model.addAttribute("Diary", get_Diary.getDiary());
@@ -88,16 +95,22 @@ public class CalendarController {
     @PostMapping("/page/write_method")
     public String write_something(@CookieValue("User") String User, @RequestParam String date, @RequestParam String Diary) { //관련된 model 옮기기
         // DB에 일기의 내용을 보냄
-        DiaryDTO get_Diary = new DiaryDTO(User, date, Diary);
-        String url = String.format("redirect:/diary/home?number=%s", User);
+        String user = securityService.getSubject(User);
+
+        DiaryDTO get_Diary = new DiaryDTO(user, date, Diary);
         diaryservice.saveDiary(get_Diary);
+
+        String url = "redirect:/diary/page/read?date="+date;
+
         return url;
     }
 
     @PostMapping("/page/change_method")
     public String update_something(@CookieValue("User") String User, @RequestParam String date, @RequestParam String Diary) {
+        String user = securityService.getSubject(User);
+
         // DB에 수정된 내용을 보냄
-        diaryservice.changedDiary(User, date, Diary);
+        diaryservice.changedDiary(user, date, Diary);
         String url = "redirect:/diary/page/read?date="+date;
 
         return url;
@@ -106,9 +119,11 @@ public class CalendarController {
     @DeleteMapping("/page/delete")
     public String delete_somthing(@CookieValue("User") String User, @RequestParam String date) {
         // DB에 일기 내용을 지운다.
-        String url = String.format("redirect:/diary/home?number=%s", User);
+        String user = securityService.getSubject(User);
 
-        diaryservice.deleteDiary(User, date);
+        diaryservice.deleteDiary(user, date);
+
+        String url = String.format("redirect:/diary/home");
 
         return url;
     }
@@ -120,15 +135,20 @@ public class CalendarController {
         return "login_page";
     }
 
+
     @PostMapping("/login/get")
     public String login_get(Model model, @RequestParam String ID, @RequestParam String password,
                             HttpServletResponse response) throws PasswordException {
         memberresponsDTO profile = Memberservice.getMember(ID);
+
         if (!profile.getPassword().equals(password)) {
             throw new PasswordException();
         }
-        // 여기는 그거 인듯
-        Cookie cookie = new Cookie("User", String.valueOf(profile.getNumber()));
+
+        String token = securityService.createToken(profile.getNumber().toString(), (10*1000*60));
+
+        // 쿠기 방식으로 설정할 수 있음
+        Cookie cookie = new Cookie("User", token);
         cookie.setMaxAge(60 * 60 * 2);
         cookie.setPath("/");
         response.addCookie(cookie);

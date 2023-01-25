@@ -5,8 +5,6 @@ import com.example.Diary.DiaryData.Repository.Diary_Repository;
 import com.example.Diary.DiaryData.dao.DiaryDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.example.Diary.Exception.MyException;
-
 
 import java.time.LocalDateTime;
 import java.util.Optional;
