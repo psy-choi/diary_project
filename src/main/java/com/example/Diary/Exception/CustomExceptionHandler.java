@@ -28,7 +28,6 @@ public class CustomExceptionHandler {
 
         return mv;
     }
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ModelAndView handleIllegalArgumentException() {
         ModelAndView mv = new ModelAndView();

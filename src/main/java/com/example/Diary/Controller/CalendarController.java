@@ -85,7 +85,7 @@ public class CalendarController {
 
         model.addAttribute("User", user);
         model.addAttribute("date", date);
-        DiaryDTO get_Diary = diaryservice.getDiary(User, date);
+        DiaryDTO get_Diary = diaryservice.getDiary(user, date);
         model.addAttribute("Diary", get_Diary.getDiary());
         return "diary/change";
     }
