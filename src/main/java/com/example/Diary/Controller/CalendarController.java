@@ -7,6 +7,7 @@ import com.example.Diary.DiaryData.Repository.dto.DiaryDTO;
 import com.example.Diary.Exception.CustomExceptionHandler;
 import com.example.Diary.Exception.PasswordException;
 import com.example.Diary.Security.SecurityService;
+import com.example.Diary.Security.Token;
 import com.example.Diary.service.Diaryservice;
 import com.example.Diary.service.memberservice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,9 @@ public class CalendarController {
     }
 
     @GetMapping("/home")
-    public String Calendar(Model model, @CookieValue("User") String User) {
+    public String Calendar(Model model, @CookieValue(value= "User", required = false) String User) {
+        System.out.println(User);
+        if (User == null) {return "redirect:/refresh";}
         String user = securityService.getSubject(User);
         model.addAttribute("ID_number", user);
         return "calendar";
@@ -47,7 +50,8 @@ public class CalendarController {
 
     @GetMapping("/page")
     public String new_page(Model model, @RequestParam String date,
-                           @CookieValue(value = "User") String User) {
+                           @CookieValue(value= "User", required = false) String User) {
+        if (User == null) {return "redirect:/refresh";}
         // 해당 html 파일에다가 User과 Date이 값을 넣고 일기의 내용을 가져옴
         Long user = Long.parseLong(securityService.getSubject(User));
         model.addAttribute("User", user);
@@ -56,7 +60,9 @@ public class CalendarController {
     }
 
     @GetMapping("/page/read")
-    public String page_model(Model model, @CookieValue("User") String User, @RequestParam String date) {
+    public String page_model(Model model, @CookieValue(value= "User", required = false) String User, @RequestParam String date) {
+        if (User == null) {return "redirect:/refresh";}
+
         // 데이터에서 ID와 date에 해당하는 값을 가져옴
         StringBuffer sb = new StringBuffer(date);
         sb = sb.replace(34,42, "(한국 표준시)");
@@ -72,15 +78,18 @@ public class CalendarController {
     }
 
     @GetMapping("/page/write")
-    public String page_write(Model model, @CookieValue("User") String User, @RequestParam String date) {
+    public String page_write(Model model, @CookieValue(value= "User", required = false) String User, @RequestParam String date) {
+        if (User == null) {return "redirect:/refresh";}
         String user = securityService.getSubject(User);
+
         model.addAttribute("User", user);
         model.addAttribute("date", date);
         return "diary/write";
     }
 
     @GetMapping("/page/changed")
-    public String page_changed(Model model, @CookieValue("User") String User, @RequestParam String date) {
+    public String page_changed(Model model, @CookieValue(value= "User", required = false)  String User, @RequestParam String date) {
+        if (User == null) {return "redirect:/refresh";}
         String user = securityService.getSubject(User);
 
         model.addAttribute("User", user);
@@ -136,7 +145,7 @@ public class CalendarController {
 
 
     @PostMapping("/login/get")
-    public String login_get(Model model, @RequestParam String ID, @RequestParam String password,
+    public String login_get(@RequestParam String ID, @RequestParam String password,
                             HttpServletResponse response) throws PasswordException {
         memberresponsDTO profile = Memberservice.getMember(ID);
 
@@ -144,13 +153,18 @@ public class CalendarController {
             throw new PasswordException();
         }
 
-        String token = securityService.createToken(profile.getNumber().toString(), (10*1000*60));
-
+        Token token = securityService.createToken(profile.getNumber().toString(),(1000*60*10) ,(1000*60*60));
+        // refresh를 넣는다.
+        securityService.login(token);
         // 쿠기 방식으로 설정할 수 있음
-        Cookie cookie = new Cookie("User", token);
-        cookie.setMaxAge(60 * 60 * 2);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+        Cookie cookie_access = new Cookie("User", token.getAccessToken());
+        cookie_access.setMaxAge(60*10);
+        cookie_access.setPath("/");
+        Cookie cookie_refresh = new Cookie("refresh", token.getRefreshToken());
+        cookie_refresh.setMaxAge(60 * 60);
+        cookie_refresh.setPath("/");
+        response.addCookie(cookie_access);
+        response.addCookie(cookie_refresh);
 
 
         String url = String.format("redirect:/diary/home");
@@ -166,7 +180,7 @@ public class CalendarController {
 
 
     @PostMapping("/join/post")
-    public String join_post(Model model, @RequestParam String ID, @RequestParam String PASSWORD, @RequestParam String PW)
+    public String join_post(@RequestParam String ID, @RequestParam String PASSWORD, @RequestParam String PW)
             throws PasswordException{
         if (!PASSWORD.equals(PW)) {
             throw new PasswordException();
